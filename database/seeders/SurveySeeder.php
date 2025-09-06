@@ -18,6 +18,12 @@ class SurveySeeder extends Seeder
         Survey::create([
             'title' => 'Product Feedback',
             'description' => 'Survey about product quality',
+            'status' => 'inactive'
+        ]);
+
+          Survey::create([
+            'title' => 'Service Feedback',
+            'description' => 'Survey about service quality',
             'status' => 'active'
         ]);
     }

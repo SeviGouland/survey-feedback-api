@@ -9,11 +9,6 @@ class QuestionSeeder extends Seeder
 {
     public function run(): void
     {
-        Question::create([
-            'survey_id' => 1,
-            'type' => 'text',
-            'question_text' => 'Tell us a few words about your experience with our service.'
-        ]);
 
         Question::create([
             'survey_id' => 1,
@@ -22,15 +17,22 @@ class QuestionSeeder extends Seeder
         ]);
 
         Question::create([
-            'survey_id' => 1,
+            'survey_id' => 2,
+            'type' => 'scale',
+            'question_text' => 'How likely are you to recommend our products to your friends? (1-5)'
+        ]);
+
+        Question::create([
+            'survey_id' => 3,
             'type' => 'multiple_choice',
             'question_text' => 'Which part of our service did you like the most?'
         ]);
 
+
         Question::create([
-            'survey_id' => 2,
-            'type' => 'scale',
-            'question_text' => 'How likely are you to recommend our products to your friends? (1-5)'
+            'survey_id' => 3,
+            'type' => 'text',
+            'question_text' => 'Tell us a few words about your experience with our service.'
         ]);
     }
 }
