@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id(); 
             $table->string('email', 191)->unique(); 
             $table->string('password'); 
-            $table->timestamp('created_at')->useCurrent();
+            $table->timestamps();
         });
     }
 
