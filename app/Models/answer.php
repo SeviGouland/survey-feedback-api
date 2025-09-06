@@ -9,12 +9,16 @@ class Answer extends Model
 {
     use HasFactory;
 
-    protected $table = 'answer'; 
+    protected $table = 'answer';
 
     protected $fillable = [
         'question_id',
         'responder_id',
         'response_data',
+    ];
+
+    protected $casts = [
+        'response_data' => 'array',
     ];
 
     // relationship with responder table
