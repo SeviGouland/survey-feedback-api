@@ -57,7 +57,7 @@ php artisan db:seed
     }
 
 -   **2. Login to get JWT token**
--   **Endpoint:** `POST /api/login` → Returns JWT token.
+-   **Endpoint:** `POST /api/login` → Returns JWT token (is valid for 1 hour).
 
 -   **3. Use the token for protected routes**
     Authorization: Bearer <your-jwt-token>
