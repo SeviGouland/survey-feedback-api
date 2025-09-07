@@ -34,75 +34,75 @@ class SurveyController extends Controller
         ]);
     }
     
-    public function submit(Request $request, $id)
-    {
-        $survey = Survey::findOrFail($id);
-        $responder = Auth::user();
+ public function submit(Request $request, $id)
+{
+    $survey = Survey::findOrFail($id);
+    $responder = Auth::user();
 
-        // check if the survey is active
-        if ($survey->status !== 'active') {
+    // check if the survey is active
+    if ($survey->status !== 'active') {
+        $this->logSubmission([
+            'survey_id' => $survey->id,
+            'responder_id' => $responder?->id,
+        ], false, 403, 'Inactive survey');
+
+        return response()->json([
+            'success' => false,
+            'message' => 'This survey is inactive. You cannot submit.'
+        ], 403);
+    }
+
+    $validated = $request->validate([
+        'answers' => 'required|array',
+        'answers.*.question_id' => 'required|exists:question,id',
+        'answers.*.response_data' => 'required|array',
+    ]);
+
+    foreach ($validated['answers'] as $item) {
+        $question = Question::findOrFail($item['question_id']);
+        if ($question->survey_id !== $survey->id) {
             $this->logSubmission([
-                'error' => 'Inactive survey',
                 'survey_id' => $survey->id,
                 'responder_id' => $responder?->id,
-                'submitted_at' => now()->toDateTimeString(),
-                'ip' => $request->ip(),
-            ]);
+                'question_id' => $question->id,
+            ], false, 400, "Question ID {$question->id} does not belong to this survey");
 
             return response()->json([
                 'success' => false,
-                'message' => 'This survey is inactive. You cannot submit.'
-            ], 403);
+                'message' => "Question ID {$question->id} does not belong to this survey."
+            ], 400);
         }
 
-        $validated = $request->validate([
-            'answers' => 'required|array',
-            'answers.*.question_id' => 'required|exists:question,id',
-            'answers.*.response_data' => 'required|array',
-        ]);
-
-        foreach ($validated['answers'] as $item) {
-            // check that the question belongs to the specific survey
-            $question = Question::findOrFail($item['question_id']);
-            if ($question->survey_id !== $survey->id) {
-                $this->logSubmission([
-                    'error' => "Question ID {$question->id} does not belong to this survey",
-                    'survey_id' => $survey->id,
-                    'responder_id' => $responder?->id,
-                    'submitted_at' => now()->toDateTimeString(),
-                    'ip' => $request->ip(),
-                ]);
-
-                return response()->json([
-                    'success' => false,
-                    'message' => "Question ID {$question->id} does not belong to this survey."
-                ], 400);
-            }
-
-            Answer::create([
-                'responder_id' => $responder->id,
-                'question_id' => $item['question_id'],
-                'response_data' => $item['response_data'],
-            ]);
-        }
-
-        // success log
-        $this->logSubmission([
+        Answer::create([
             'responder_id' => $responder->id,
-            'survey_id' => $survey->id,
-            'answers' => $validated['answers'],
-            'submitted_at' => now()->toDateTimeString(),
-            'ip' => $request->ip(),
+            'question_id' => $item['question_id'],
+            'response_data' => $item['response_data'],
         ]);
+    }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Answers submitted successfully.'
-        ]);
-    }
-    private function logSubmission($data)
-    {
-        Storage::disk('local')->append('survey_submissions.json', json_encode($data));
-    }
+    $this->logSubmission([
+        'responder_id' => $responder->id,
+        'survey_id' => $survey->id,
+        'answers' => $validated['answers'],
+    ]);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Answers submitted successfully.'
+    ]);
+}
+
+private function logSubmission(array $data, bool $success = true, int $status = 200, ?string $errorMessage = null)
+{
+    $logData = array_merge([
+        'success' => $success,
+        'status_code' => $status,
+        'error' => $errorMessage,
+        'submitted_at' => now()->toDateTimeString(),
+        'ip' => request()->ip(),
+    ], $data);
+
+    Storage::disk('local')->append('survey_submissions.json', json_encode($logData));
+}
 
 }
