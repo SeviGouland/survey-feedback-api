@@ -1,61 +1,116 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Survey Feedback API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Project Overview
 
-## About Laravel
+This is a backend API built with **Laravel 12** and **PHP 8.3.14**. It allows users to view surveys, get questions, submit answers (with JWT authentication), and retrieve responder details.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+It is intended for web or mobile applications to collect customer feedback post-transaction.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Tech Stack
 
-## Learning Laravel
+PHP 8.3.14
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Laravel 12
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+MySQL
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+JWT Authentication via tymon/jwt-auth
 
-## Laravel Sponsors
+Eloquent ORM
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Rate limiting per IP
 
-### Premium Partners
+Logging survey submissions to JSON file
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Postman collection included
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Setup Instructions
 
-## Code of Conduct
+After cloning the repository, run the following commands to set up the project:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+1. **Install dependencies**  
+   composer install
 
-## Security Vulnerabilities
+2. **Run migrations**
+   php artisan migrate
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+3 **Seed the database with dummy surveys and questions**
+php artisan db:seed
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Authentication
+
+-   ### 1. Register a new responder
+
+-   **Endpoint:** `POST /api/register`
+-   **Description:** Creates a new responder account.
+-   **Example request body json:**
+    {
+    "email": "user@example.com",
+    "password": "secret123",
+    "password_confirmation": "secret123"
+    }
+
+-   **2. Login to get JWT token**
+-   **Endpoint:** `POST /api/login` → Returns JWT token.
+
+-   **3. Use the token for protected routes**
+    Authorization: Bearer <your-jwt-token>
+
+Protected endpoints require the token in the `Authorization` header:
+
+Protected endpoints:
+
+-   `POST /api/surveys/{id}/submit`
+-   `GET /api/me`
+
+---
+
+## API Endpoints
+
+| Endpoint                   | Method | Auth | Description                             |
+| -------------------------- | ------ | ---- | --------------------------------------- |
+| `/api/surveys`             | GET    | No   | List all active surveys                 |
+| `/api/surveys/{id}`        | GET    | No   | Get survey details with questions       |
+| `/api/surveys/{id}/submit` | POST   | Yes  | Submit answers to a survey              |
+| `/api/me`                  | GET    | Yes  | Get current logged-in responder details |
+
+---
+
+## Logging Submissions
+
+All submissions (success or failure) are logged to:
+
+survey-feedback-api/
+├─ storage/
+│ ├─ app/
+│ ├─ private/
+│ └─ survey_submissions.json
+
+---
+
+## Postman Collection
+
+You can find the Collection:
+
+survey-feedback-api/
+├─ postman/
+│ ├─ survey_feedback_endpoints.postman_collection.json
+│
+
+---
+
+## .env
+
+The following changes were made in the `.env` file for the application:
+
+-   **JWT_SECRET** – Set the secret key for JWT authentication.
+-   **Rate Limiting**:
+    -   `SUBMIT_SURVEY_LIMIT=5` – Limit for survey submissions per minute per IP.
+    -   `ME_LIMIT=10` – Limit for `/me` endpoint requests per minute per IP.
+-   **SESSION_DRIVER** – Changed to `file` because JWT is used for stateless authentication, so the database sessions table is not required.
