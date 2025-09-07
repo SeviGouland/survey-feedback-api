@@ -38,8 +38,11 @@ After cloning the repository, run the following commands to set up the project:
 2. **Run migrations**
    php artisan migrate
 
-3 **Seed the database with dummy surveys and questions**
-php artisan db:seed
+3. **Seed the database with dummy surveys and questions**
+   php artisan db:seed
+
+4. **Start the local development server**
+   php artisan serve
 
 ---
 
