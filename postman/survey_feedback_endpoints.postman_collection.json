@@ -1,0 +1,254 @@
+{
+	"info": {
+		"_postman_id": "d69ef9e6-3d6c-4705-a418-3e19f6304fd6",
+		"name": "survey_feedback_endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33465169"
+	},
+	"item": [
+		{
+			"name": "endpoint for registration",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"example@gmail.com\",\r\n  \"password\": \"123456789\",\r\n  \"password_confirmation\": \"123456789\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}{{api_path}}/register",
+					"host": [
+						"{{base_url}}{{api_path}}"
+					],
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "endpoint for login",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"e-test@gmail.com\",\r\n  \"password\": \"test123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}{{api_path}}/login",
+					"host": [
+						"{{base_url}}{{api_path}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "endpoint of list with all the active surveys",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}{{api_path}}/surveys",
+					"host": [
+						"{{base_url}}{{api_path}}"
+					],
+					"path": [
+						"surveys"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "endpoint getting the survey and its related question",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}{{api_path}}/surveys/3",
+					"host": [
+						"{{base_url}}{{api_path}}"
+					],
+					"path": [
+						"surveys",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "success submit",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNzU3Mjc0MjcwLCJleHAiOjE3NTcyNzc4NzAsIm5iZiI6MTc1NzI3NDI3MCwianRpIjoic1NHVnRhVjV3WGhZMUFGWSIsInN1YiI6IjEiLCJwcnYiOiIxYmVhNGQyMDcyNDZkYzY5ZWIxZGFiNjUyYzY0MjNmZWQ0N2U1MWE4In0.aT7UBIqro699h-pfK7E6voTxalBV5gi5872lkUMXY7E",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"answers\": [\r\n    {\r\n      \"question_id\": 4,\r\n      \"response_data\": {\r\n        \"score\": 5,\r\n        \"comment\": \"Very satisfied\"\r\n      }\r\n    },\r\n    {\r\n      \"question_id\": 3,\r\n      \"response_data\": {\r\n        \"selected_options\": [\"Option A\"]\r\n      }\r\n    }\r\n  ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}{{api_path}}/surveys/3/submit",
+					"host": [
+						"{{base_url}}{{api_path}}"
+					],
+					"path": [
+						"surveys",
+						"3",
+						"submit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "inactive survey submit",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNzU3Mjc0MjcwLCJleHAiOjE3NTcyNzc4NzAsIm5iZiI6MTc1NzI3NDI3MCwianRpIjoic1NHVnRhVjV3WGhZMUFGWSIsInN1YiI6IjEiLCJwcnYiOiIxYmVhNGQyMDcyNDZkYzY5ZWIxZGFiNjUyYzY0MjNmZWQ0N2U1MWE4In0.aT7UBIqro699h-pfK7E6voTxalBV5gi5872lkUMXY7E",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"answers\": [\r\n    {\r\n      \"question_id\": 2,\r\n      \"response_data\": {\r\n        \"score\": 5,\r\n        \"comment\": \"Very satisfied\"\r\n      }\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}{{api_path}}/surveys/2/submit",
+					"host": [
+						"{{base_url}}{{api_path}}"
+					],
+					"path": [
+						"surveys",
+						"2",
+						"submit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "wrong question in survey submit",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNzU3Mjc0MjcwLCJleHAiOjE3NTcyNzc4NzAsIm5iZiI6MTc1NzI3NDI3MCwianRpIjoic1NHVnRhVjV3WGhZMUFGWSIsInN1YiI6IjEiLCJwcnYiOiIxYmVhNGQyMDcyNDZkYzY5ZWIxZGFiNjUyYzY0MjNmZWQ0N2U1MWE4In0.aT7UBIqro699h-pfK7E6voTxalBV5gi5872lkUMXY7E",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"answers\": [\r\n   {\r\n      \"question_id\": 4,\r\n      \"response_data\": {\r\n        \"text\": \"Excellent and fast service.\"\r\n      }\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}{{api_path}}/surveys/1/submit",
+					"host": [
+						"{{base_url}}{{api_path}}"
+					],
+					"path": [
+						"surveys",
+						"1",
+						"submit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "endpoint for getting current logged-in responder details",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNzU3Mjc0MjcwLCJleHAiOjE3NTcyNzc4NzAsIm5iZiI6MTc1NzI3NDI3MCwianRpIjoic1NHVnRhVjV3WGhZMUFGWSIsInN1YiI6IjEiLCJwcnYiOiIxYmVhNGQyMDcyNDZkYzY5ZWIxZGFiNjUyYzY0MjNmZWQ0N2U1MWE4In0.aT7UBIqro699h-pfK7E6voTxalBV5gi5872lkUMXY7E",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"sevigouland@gmail.com\",\r\n  \"password\": \"123456789\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}{{api_path}}/me",
+					"host": [
+						"{{base_url}}{{api_path}}"
+					],
+					"path": [
+						"me"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
